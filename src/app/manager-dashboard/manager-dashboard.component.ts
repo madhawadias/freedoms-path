@@ -9,11 +9,16 @@ import * as firebase from "firebase";
 export class ManagerDashboardComponent implements OnInit {
   public teamsData: any = [];
   public outputData: any = [];
+  // private teamId: String = '0';
+  // private missionId: String = '0';
+  // private taskId: String = '0';
+  // private score: Number = 15;
 
   constructor() { }
 
   ngOnInit(): void {
     this.getTeams()
+    // this.updateQuestions(this.teamId,this.missionId,this.taskId,this.score)
     // this.createTeam()
     // this.createArray()
     // console.log(this.teamsData)
@@ -136,6 +141,27 @@ export class ManagerDashboardComponent implements OnInit {
       console.log(snapshot.val())
     });
   }
+
+  updateQuestions(teamId, missionId, taskId, score){
+    teamId = teamId.toString();
+    missionId = missionId.toString();
+    taskId = taskId.toString();
+    console.log(teamId + missionId + taskId + score)
+    firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
+      .child('task').child(taskId).update({questions: score})
+    this.getTeams();
+  }
+
+  updateHints(teamId, missionId, taskId, score){
+    teamId = teamId.toString();
+    missionId = missionId.toString();
+    taskId = taskId.toString();
+    console.log(teamId + missionId + taskId + score)
+    firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
+      .child('task').child(taskId).update({hints: score})
+    this.getTeams();
+  }
+
 
   createArray(){
     let self = this;
