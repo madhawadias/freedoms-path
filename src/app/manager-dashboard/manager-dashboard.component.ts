@@ -9,10 +9,6 @@ import * as firebase from "firebase";
 export class ManagerDashboardComponent implements OnInit {
   public teamsData: any = [];
   public outputData: any = [];
-  // private teamId: String = '0';
-  // private missionId: String = '0';
-  // private taskId: String = '0';
-  // private score: Number = 15;
 
   constructor() { }
 
@@ -25,8 +21,8 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   createTeam(){
-    firebase.database().ref('teams/2').set({
-      name: "Alpha",
+    firebase.database().ref('teams/1').set({
+      name: "Beta",
       questions: 12,
       hints: 7,
       points: 444,
@@ -34,6 +30,9 @@ export class ManagerDashboardComponent implements OnInit {
       missions: [
         {
           name: "Air CMC",
+          startTime: 0,
+          endTime: 0,
+          timeLeft: 0,
           task: [
             {
               questions: 7,
@@ -54,6 +53,9 @@ export class ManagerDashboardComponent implements OnInit {
         },
         {
           name: "Corn Maze",
+          startTime: 0,
+          endTime: 0,
+          timeLeft: 0,
           task: [
             {
               questions: 4,
@@ -74,6 +76,9 @@ export class ManagerDashboardComponent implements OnInit {
         },
         {
           name: "Portions Master",
+          startTime: 0,
+          endTime: 0,
+          timeLeft: 0,
           task: [
             {
               questions: 4,
@@ -94,6 +99,9 @@ export class ManagerDashboardComponent implements OnInit {
         },
         {
           name: "Explorer",
+          startTime: 0,
+          endTime: 0,
+          timeLeft: 0,
           task: [
             {
               questions: 7,
@@ -117,13 +125,6 @@ export class ManagerDashboardComponent implements OnInit {
     });
   }
 
-  addHints(teamName){
-    firebase.database().ref('team/alpha').set({
-      hints: 7,
-      points: 444
-    });
-  }
-
   getTeam(child){
     let self = this;
     let childFilter = child.toLowerCase()
@@ -140,6 +141,28 @@ export class ManagerDashboardComponent implements OnInit {
       // self.teamsData1 = snapshot.val();
       console.log(snapshot.val())
     });
+  }
+
+  updateTime(teamId, missionId, timeType, timeValue){
+    teamId = teamId.toString();
+    missionId = missionId.toString();
+    timeType = timeType.toString();
+    timeValue = timeValue.toString();
+    console.log(teamId + missionId + timeType + timeValue)
+    if(timeValue == "startTime"){
+      firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
+        .update({startTime: timeValue})
+    }
+    if(timeValue == "endTime"){
+      firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
+        .update({endTime: timeValue})
+    }
+    if(timeValue == "timeLeft"){
+      firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
+        .update({timeLeft: timeValue})
+    }
+
+    this.getTeams();
   }
 
   updateQuestions(teamId, missionId, taskId, score){
