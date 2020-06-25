@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as firebase from "firebase";
-// import { AuthenticationService } from  '../authentication.service';
+import { AuthenticationService } from  '../authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
   getManagers(){
@@ -29,8 +30,8 @@ export class LoginComponent implements OnInit {
     firebase.database().ref('managers/0').set({
       name: "Keheliya Amarasinghe",
       username: "keheliyaa",
-      password: 7,
-      team: [1,2],
+      password: "teena",
+      team: [0,1],
 
     });
   }
