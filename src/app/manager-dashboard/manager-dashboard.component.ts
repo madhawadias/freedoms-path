@@ -144,20 +144,21 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   updateTime(teamId, missionId, timeType, timeValue){
+    console.log(teamId + missionId + timeType + timeValue)
     teamId = teamId.toString();
     missionId = missionId.toString();
     timeType = timeType.toString();
     timeValue = timeValue.toString();
-    console.log(teamId + missionId + timeType + timeValue)
-    if(timeValue == "startTime"){
+
+    if(timeType == "startTime"){
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({startTime: timeValue})
     }
-    if(timeValue == "endTime"){
+    if(timeType == "endTime"){
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({endTime: timeValue})
     }
-    if(timeValue == "timeLeft"){
+    if(timeType == "timeLeft"){
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({timeLeft: timeValue})
     }
@@ -184,6 +185,10 @@ export class ManagerDashboardComponent implements OnInit {
       .child('task').child(taskId).update({hints: score})
     this.getTeams();
   }
+
+  // calculatePoints(teamId){
+  //   this.teamsData.
+  // }
 
 
   createArray(){
