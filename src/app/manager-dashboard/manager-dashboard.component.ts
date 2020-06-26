@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import * as firebase from "firebase";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -9,11 +10,14 @@ import * as firebase from "firebase";
 export class ManagerDashboardComponent implements OnInit {
   public teamsData: any = [];
   public outputData: any = [];
+  public id: any = [];
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) {
+    this.id = route.snapshot.params.id
+  }
 
   ngOnInit(): void {
-    this.getTeams()
+    this.getTeam(this.id)
     // this.updateQuestions(this.teamId,this.missionId,this.taskId,this.score)
     // this.createTeam()
     // this.createArray()
@@ -125,16 +129,19 @@ export class ManagerDashboardComponent implements OnInit {
     });
   }
 
-  getTeam(child){
+  getTeam(managerId){
     let self = this;
-    let childFilter = child.toLowerCase()
-    firebase.database().ref('/teams/').orderByChild('name').equalTo(childFilter).once('value').then(function(snapshot) {
+    let managerIdValue = managerId
+    console.log("managerId : " + managerId)
+    firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdValue).on('value', function(snapshot) {
       self.teamsData = snapshot.val();
+      // self.teamsData1 = snapshot.val();
       console.log(snapshot.val())
     });
   }
 
   getTeams(){
+    console.log("id: " + this.id)
     let self = this;
     firebase.database().ref('/teams/').once('value').then(function(snapshot) {
       self.teamsData = snapshot.val();

@@ -52,11 +52,11 @@ export class LoginComponent implements OnInit {
   }
 
   createManager(){
-    firebase.database().ref('managers/0').set({
-      name: "Keheliya Amarasinghe",
-      username: "keheliyaa",
-      password: "teena",
-      team: [0,1],
+    firebase.database().ref('managers/1').set({
+      name: "Madhawa Dias",
+      username: "madhawad",
+      password: "1234",
+      team: [2,3],
 
     });
   }
