@@ -131,8 +131,8 @@ export class ManagerDashboardComponent implements OnInit {
 
   getTeam(managerId){
     let self = this;
-    let managerIdValue = managerId
-    console.log("managerId : " + managerId)
+    let managerIdValue: number = +managerId
+    console.log("managerId : " + managerIdValue)
     firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdValue).on('value', function(snapshot) {
       self.teamsData = snapshot.val();
       // self.teamsData1 = snapshot.val();
@@ -192,11 +192,6 @@ export class ManagerDashboardComponent implements OnInit {
       .child('task').child(taskId).update({hints: score})
     this.getTeams();
   }
-
-  // calculatePoints(teamId){
-  //   this.teamsData.
-  // }
-
 
   createArray(){
     let self = this;
