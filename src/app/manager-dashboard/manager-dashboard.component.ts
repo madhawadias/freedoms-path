@@ -27,14 +27,41 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   createTeam(){
-    firebase.database().ref('teams/0').set({
-      name: "Alpha",
+    firebase.database().ref('teams/2').set({
+      name: "Gamma",
       managerId: 0,
       questions: 0,
       hints: 0,
       points: 0,
       mission: "",
       missions: [
+        {
+          name: "First Light",
+          startTime: 0,
+          endTime: 0,
+          timeLeft: 0,
+          timeBonus: 0,
+          task: [
+            {
+              questions: 0,
+              hints: 0,
+              name: "task1",
+              taskBonus: 0,
+            },
+            {
+              questions: 0,
+              hints: 0,
+              name: "task2",
+              taskBonus: 0,
+            },
+            {
+              questions: 0,
+              hints: 0,
+              name: "task3",
+              taskBonus: 0,
+            }
+          ]
+        },
         {
           name: "Air CMC",
           startTime: 0,
@@ -118,6 +145,33 @@ export class ManagerDashboardComponent implements OnInit {
         },
         {
           name: "Explorer",
+          startTime: 0,
+          endTime: 0,
+          timeLeft: 0,
+          timeBonus: 0,
+          task: [
+            {
+              questions: 0,
+              hints: 0,
+              name: "task1",
+              taskBonus: 0,
+            },
+            {
+              questions: 0,
+              hints: 0,
+              name: "task2",
+              taskBonus: 0,
+            },
+            {
+              questions: 0,
+              hints: 0,
+              name: "task3",
+              taskBonus: 0,
+            }
+          ]
+        },
+        {
+          name: "Last Stand",
           startTime: 0,
           endTime: 0,
           timeLeft: 0,
@@ -280,10 +334,17 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   updateTimeBonus(teamId, missionIdNum: number, missionId) {
+
     for (let i = 0; i < this.teamsData.length; i++) {
-      if (i == teamId) {
+      // Checks whether all questions are answered
+      if (i == teamId && ((this.teamsData[i].missions[1].task[0].questions == 5 && this.teamsData[i].missions[1].task[1].questions == 5 && this.teamsData[i].missions[1].task[0].questions == 5)
+        || (this.teamsData[i].missions[2].task[0].questions == 10 && this.teamsData[i].missions[2].task[1].questions == 10 && this.teamsData[i].missions[2].task[0].questions == 10)
+        || (this.teamsData[i].missions[3].task[0].questions == 10 && this.teamsData[i].missions[3].task[1].questions == 10 && this.teamsData[i].missions[3].task[0].questions == 10)
+        || (this.teamsData[i].missions[4].task[0].questions == 15))) {
+
         if (this.teamsData[i].missions[missionIdNum].endTime && this.teamsData[i].missions[missionIdNum].startTime) {
-          let timeBonus: number
+          let timeDifference: number = 0
+          let extraMins: number = 0
           let endTime: string = this.teamsData[i].missions[missionIdNum].endTime
           let endTimeSplit = endTime.split(':')
           let endTimeHours: number = +endTimeSplit[0]
@@ -296,11 +357,33 @@ export class ManagerDashboardComponent implements OnInit {
           let startTimeMin: number = +startTimeSplit[1]
           startTimeMin = startTimeHours * 60 + startTimeMin
 
-          timeBonus = endTimeMin - startTimeMin
-          console.log("Time Difference: " + timeBonus)
+          timeDifference = endTimeMin - startTimeMin
+          //Calculating time bonus points
+          if(missionIdNum == 1 && timeDifference<30){
+            extraMins = 30 - timeDifference;
+          }
+          if(missionIdNum == 2 && timeDifference<20){
+            extraMins = 20 - timeDifference;
+          }
+          if(missionIdNum == 3 && timeDifference<30){
+            extraMins = 30 - timeDifference;
+          }
+          if(missionIdNum == 4 && timeDifference<10){
+            extraMins = 10 - timeDifference;
+          }
+          console.log("Time Difference: " + timeDifference)
           firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
-            .update({timeBonus: timeBonus * 150})
+            .update({timeBonus: extraMins * 150})
         }
+      }
+    }
+  }
+
+  updateTaskBonus(teamId, missionId, taskId){
+
+    for(let i = 0; i < this.teamsData.length; i++){
+      if(i == teamId){
+
       }
     }
   }
