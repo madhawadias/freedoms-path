@@ -27,8 +27,8 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   createTeam(){
-    firebase.database().ref('teams/2').set({
-      name: "Gamma",
+    firebase.database().ref('teams/0').set({
+      name: "Alpha",
       managerId: 0,
       questions: 0,
       hints: 0,
@@ -212,7 +212,6 @@ export class ManagerDashboardComponent implements OnInit {
       console.log(snapshot.val())
     });
   }
-
   getTeamPoints(teamId){
     let points : number = 0
     // let teamIdValue: number = +teamId
@@ -243,42 +242,74 @@ export class ManagerDashboardComponent implements OnInit {
     return hints
   }
 
-  updatePoints(teamId, score){
+  updatePoints(teamId){
+    let self = this;
     let points : number = 0;
     let scoreValue : number = 0;
+    this.getTeams()
     for (let i=0; i<this.teamsData.length; i++){
       if (i == teamId){
-        points = this.teamsData[i].points
-        let airCMCTimeBonus = this.teamsData[i].missions[0].timeBonus
-        let cornMazeTimeBonus = this.teamsData[i].missions[1].timeBonus
-        let portionsMasterTimeBonus = this.teamsData[i].missions[2].timeBonus
-        let explorerTimeBonus = this.teamsData[i].missions[3].timeBonus
+        // points = this.teamsData[i].points
+        let airCMCTimeBonus = this.teamsData[i].missions[1].timeBonus
+        let airCMCTask0Bonus = this.teamsData[i].missions[1].task[0].taskBonus
+        let airCMCTask0points = this.teamsData[i].missions[1].task[0].questions*2000
+        let airCMCTask0Hints = this.teamsData[i].missions[1].task[0].hints*500
+        let airCMCTask1Bonus = this.teamsData[i].missions[1].task[1].taskBonus
+        let airCMCTask1points = this.teamsData[i].missions[1].task[1].questions*2000
+        let airCMCTask1Hints = this.teamsData[i].missions[1].task[1].hints*500
+        let airCMCTask2Bonus = this.teamsData[i].missions[1].task[2].taskBonus
+        let airCMCTask2points = this.teamsData[i].missions[1].task[2].questions*2000
+        let airCMCTask2Hints = this.teamsData[i].missions[1].task[2].hints*500
 
-        points = points+airCMCTimeBonus+cornMazeTimeBonus+portionsMasterTimeBonus+explorerTimeBonus
+        let cornMazeTimeBonus = this.teamsData[i].missions[2].timeBonus
+        let cornMazeTask0Bonus = this.teamsData[i].missions[2].task[0].taskBonus
+        let cornMazeTask0Points = this.teamsData[i].missions[2].task[0].questions*200
+        let cornMazeTask1Bonus = this.teamsData[i].missions[2].task[1].taskBonus
+        let cornMazeTask1Points = this.teamsData[i].missions[2].task[1].questions*200
+        let cornMazeTask2Bonus = this.teamsData[i].missions[2].task[2].taskBonus
+        let cornMazeTask2Points = this.teamsData[i].missions[2].task[2].questions*200
+
+        let portionsMasterTimeBonus = this.teamsData[i].missions[3].timeBonus
+        let portionsMasterTask0Bonus = this.teamsData[i].missions[3].task[0].taskBonus
+        let portionsMasterTask0Points = this.teamsData[i].missions[3].task[0].questions*1000
+        let portionsMasterTask0Hints = this.teamsData[i].missions[3].task[0].hints*250
+        let portionsMasterTask1Bonus = this.teamsData[i].missions[3].task[1].taskBonus
+        let portionsMasterTask1Points = this.teamsData[i].missions[3].task[1].questions*1000
+        let portionsMasterTask1Hints = this.teamsData[i].missions[3].task[1].hints*250
+        let portionsMasterTask2Bonus = this.teamsData[i].missions[3].task[2].taskBonus
+        let portionsMasterTask2Points = this.teamsData[i].missions[3].task[2].questions*1000
+        let portionsMasterTask2Hints = this.teamsData[i].missions[3].task[2].hints*250
+
+        let explorerTimeBonus = this.teamsData[i].missions[4].timeBonus
+        let explorerTask0Bonus = this.teamsData[i].missions[4].task[0].taskBonus
+        let explorerTask0Points = this.teamsData[i].missions[4].task[0].questions*800
+
+        points = airCMCTask0points+airCMCTask1points+airCMCTask2points
+          +cornMazeTask0Points+cornMazeTask1Points+cornMazeTask2Points
+          +portionsMasterTask0Points+portionsMasterTask1Points+portionsMasterTask2Points
+          +explorerTask0Points
+          +airCMCTimeBonus+cornMazeTimeBonus+portionsMasterTimeBonus+explorerTimeBonus
+          +airCMCTask0Bonus+airCMCTask1Bonus+airCMCTask2Bonus
+          +cornMazeTask0Bonus+cornMazeTask1Bonus+cornMazeTask2Bonus
+          +portionsMasterTask0Bonus+portionsMasterTask1Bonus+portionsMasterTask2Bonus
+          +explorerTask0Bonus
+          -airCMCTask0Hints-airCMCTask1Hints-airCMCTask2Hints
+          -portionsMasterTask0Hints-portionsMasterTask1Hints-portionsMasterTask2Hints
+
       }
     }
-    // Points for task completed
-    // AIR CMC
-    // for (let i=0; i<this.teamsData.length; i++){
-    //   if (i == teamId){
-    //     points = this.teamsData[i].points
-    //     if (this.teamsData[i].missions[0].task[0].questions==5){
-    //       points = points + 3000
-    //     }
-    //     if (this.teamsData[i].missions[0].task[1].questions==5){
-    //       points = points + 3000
-    //     }
-    //     if (this.teamsData[i].missions[0].task[2].questions==5){
-    //       points = points + 3000
-    //     }
-    //
-    //   }
-    // }
-    scoreValue =  score
+
+    // scoreValue =  score
     console.log("existing point: "+points+" New score: "+scoreValue)
-    points = points + scoreValue
+    // points = points + scoreValue
     firebase.database().ref('/teams/').child(teamId)
-      .update({points: points})
+      .update({points: points}).then(() => {
+      firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        self.teamsData = snapshot.val();
+        console.log(snapshot.val())
+      });
+
+    });
   }
 
   getTeams(){
@@ -302,7 +333,17 @@ export class ManagerDashboardComponent implements OnInit {
 
     if(timeType == "startTime"){
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
-        .update({startTime: timeValue})
+        .update({startTime: timeValue}).then(() => {
+        console.log("working")
+        firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+          self.teamsData = snapshot.val();
+          // self.teamsData1 = snapshot.val();
+          console.log(snapshot.val())
+          // self.updateTimeBonus(teamId, missionIdNum, missionId)
+        });
+
+
+      })
     }
     if(timeType == "endTime"){
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
@@ -322,14 +363,6 @@ export class ManagerDashboardComponent implements OnInit {
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({timeLeft: timeValue})
     }
-
-    // this.getTeams();
-
-    // Bonus points
-
-    // this.updateTimeBonus(teamId, missionIdNum, missionId)
-
-
 
   }
 
@@ -380,39 +413,75 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   updateTaskBonus(teamId, missionId, taskId){
-
+    let self = this;
+    let missionIdNum: number = +missionId
+    let taskIdNum: number = +taskId
     for(let i = 0; i < this.teamsData.length; i++){
-      if(i == teamId){
+      if (i == teamId && missionIdNum == 1 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions == 5 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 3000}).then(() => {
+          firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+            self.teamsData = snapshot.val();
+            console.log(snapshot.val())
+          });
 
+        });
+      }
+      if (i == teamId && missionIdNum == 2 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions == 10 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 300})
+      }
+      if (i == teamId && missionIdNum == 3 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions == 10 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 1500})
+      }
+      if (i == teamId && missionIdNum == 4 && ((this.teamsData[i].missions[missionIdNum].task[0].questions == 15 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 1200})
+      }
+      if (i == teamId && missionIdNum == 1 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions < 5 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 0})
+      }
+      if (i == teamId && missionIdNum == 2 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions < 10 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 0})
+      }
+      if (i == teamId && missionIdNum == 3 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions < 10 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 0})
+      }
+      if (i == teamId && missionIdNum == 4 && ((this.teamsData[i].missions[missionIdNum].task[0].questions < 15 ))) {
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
+          .update({taskBonus: 0})
       }
     }
   }
 
-
   updateQuestions(teamId, missionId, taskId, score, sign){
+    let self = this;
     let points: number = 0;
     let signValue: number = +sign
-    if(missionId == 0){
-      points = 2000*signValue
-      this.updatePoints(teamId, points)
-    }
-    if(missionId == 1){
-      points = 200*signValue
-      this.updatePoints(teamId, points)
-    }
-    if(missionId == 2){
-      points = 1000*signValue
-      this.updatePoints(teamId, points)
-    }
-    if(missionId == 3){
-      points = 800*signValue
-      this.updatePoints(teamId, points)
-    }
+    // if(missionId == 0){
+    //   points = 2000*signValue
+    //   // this.updatePoints(teamId, points)
+    // }
+    // if(missionId == 1){
+    //   points = 200*signValue
+    //   // this.updatePoints(teamId, points)
+    // }
+    // if(missionId == 2){
+    //   points = 1000*signValue
+    //   // this.updatePoints(teamId, points)
+    // }
+    // if(missionId == 3){
+    //   points = 800*signValue
+    //   // this.updatePoints(teamId, points)
+    // }
     teamId = teamId.toString();
     missionId = missionId.toString();
     taskId = taskId.toString();
     console.log(teamId + missionId + taskId + score)
-    // let questionObj = this.teamsData.filter(x => x.)
     let questionsValue : number = 0;
     for (let i=0; i<this.teamsData.length; i++){
       if (i == teamId){
@@ -422,26 +491,37 @@ export class ManagerDashboardComponent implements OnInit {
     firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
       .child('task').child(taskId).update({questions: score})
     firebase.database().ref('/teams/').child(teamId)
-      .update({questions: questionsValue + signValue})
+      .update({questions: questionsValue + signValue}).then(() => {
+      firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        self.teamsData = snapshot.val();
+        console.log(snapshot.val())
+        self.updateTaskBonus(teamId, missionId, taskId)
+        self.updatePoints(teamId)
+      });
+
+    });
     this.getTeams();
+
+
   }
 
   updateHints(teamId, missionId, taskId, score, sign){
+    let self = this;
     let hints: number = 0;
     let signValue: number = -sign
-    if(missionId == 0){
-      hints = 500*signValue
-      this.updatePoints(teamId, hints)
-    }
     if(missionId == 1){
+      hints = 500*signValue
+      this.updatePoints(teamId)
+    }
+    if(missionId == 2){
       // hints = 0
       // this.updatePoints(teamId, hints)
     }
-    if(missionId == 2){
-      hints = 250*signValue
-      this.updatePoints(teamId, hints)
-    }
     if(missionId == 3){
+      hints = 250*signValue
+      this.updatePoints(teamId)
+    }
+    if(missionId == 4){
       // hints = 0
       // this.updatePoints(teamId, hints)
     }
@@ -458,7 +538,14 @@ export class ManagerDashboardComponent implements OnInit {
     firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
       .child('task').child(taskId).update({hints: score})
     firebase.database().ref('/teams/').child(teamId)
-      .update({hints: hintsValue + signValue})
+      .update({hints: hintsValue - signValue}).then(() => {
+      firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        self.teamsData = snapshot.val();
+        console.log(snapshot.val())
+        self.updatePoints(teamId)
+      });
+
+    });
     this.getTeams();
   }
 
