@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import * as firebase from "firebase";
 import {ActivatedRoute} from "@angular/router";
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -11,6 +12,9 @@ export class ManagerDashboardComponent implements OnInit {
   public teamsData: any = [];
   public outputData: any = [];
   public id: any = [];
+  timeLeft: number = 60;
+  interval;
+  subscribeTimer: any;
 
   constructor(private route: ActivatedRoute) {
     this.id = route.snapshot.params.id
@@ -324,6 +328,7 @@ export class ManagerDashboardComponent implements OnInit {
 
   updateTime(teamId, missionId, timeType, timeValue){
     console.log(teamId + missionId + timeType + timeValue)
+    let teamIdNum: number = +teamId
     let missionIdNum: number = +missionId
     teamId = teamId.toString();
     missionId = missionId.toString();
@@ -339,11 +344,12 @@ export class ManagerDashboardComponent implements OnInit {
           self.teamsData = snapshot.val();
           // self.teamsData1 = snapshot.val();
           console.log(snapshot.val())
+          self.startTimer()
           // self.updateTimeBonus(teamId, missionIdNum, missionId)
         });
-
-
       })
+      firebase.database().ref('/teams/').child(teamId)
+        .update({mission: this.teamsData[teamIdNum].missions[missionIdNum].name})
     }
     if(timeType == "endTime"){
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
@@ -547,6 +553,27 @@ export class ManagerDashboardComponent implements OnInit {
 
     });
     this.getTeams();
+  }
+  timeLeftTimer() {
+    const source = timer(1000, 2000);
+    const abc = source.subscribe(val => {
+      console.log(val, '-');
+      this.subscribeTimer = this.timeLeft - val;
+    });
+  }
+
+  startTimer() {
+    this.interval = setInterval(() => {
+      if(this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.timeLeft = 60;
+      }
+    },1000)
+  }
+
+  pauseTimer() {
+    clearInterval(this.interval);
   }
 
   createArray(){
