@@ -10,7 +10,7 @@
     <th colspan="3">Total</th>
   </tr>
   <tr>
-    <th>Team</th>
+    <th style="width: 82px">Team</th>
     <th>Mission</th>
     <th>Start Time</th>
     <th>End Time</th>
@@ -33,18 +33,18 @@
   <tr *ngFor="let raw of teamsData | keyvalue">
     <td>{{raw.value.name}} <br> {{raw.value.points}}</td>
     <td class="p-0">
-      <tr *ngFor="let mission of raw.value.missions"><td style="height: 62px">{{mission.name}}</td></tr>
+      <tr *ngFor="let mission of raw.value.missions"><td style="height: 85px">{{mission.name}}</td></tr>
     </td>
 
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td style="height: 62px"><input #inputTime type="time" value="{{mission.value.startTime}}"
+        <td style="height: 85px"><input #inputTime type="time" value="{{mission.value.startTime}}"
                    (change)="updateTime(raw.key,mission.key,'startTime',inputTime.value)"></td>
       </tr>
     </td>
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td style="height: 62px"><input #inputTimeEnd type="time" value="{{mission.value.endTime}}"
+        <td style="height: 85px"><input #inputTimeEnd type="time" value="{{mission.value.endTime}}"
                    (change)="updateTime(raw.key,mission.key,'endTime',inputTimeEnd.value)"></td>
       </tr>
     </td>
@@ -52,11 +52,11 @@
 
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
         <td colspan="3" [hidden]="mission.value.name == 'Air CMC' || mission.value.name == 'Portions Master' || mission.value.name == 'Last Stand'
-      || mission.value.name == 'Corn Maze' || mission.value.name == 'Explorer'" class="p-0" style="height: 62px">
-          <input #score type="number" placeholder="{{mission.value.task[0].questions}}" (change)="updateFirstLightScore(raw.key,score.value)">
+      || mission.value.name == 'Corn Maze' || mission.value.name == 'Explorer'" class="p-0" style="height: 85px">
+          <input style="width: 60px" #score type="number" placeholder="{{mission.value.task[0].questions}}" (change)="updateFirstLightScore(raw.key,score.value)">
         </td>
         <td [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'"
-            class="p-0" style="height: 62px">
+            class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-danger"
                   [disabled]="(mission.key==1 && mission.value.task[0].questions==0) ||
                               (mission.key==2 && mission.value.task[0].questions==0) ||
@@ -64,28 +64,28 @@
                               (mission.key==4 && mission.value.task[0].questions==0)"
                   (click)="updateQuestions(raw.key,mission.key,0,mission.value.task[0].questions-1, -1)">-</button></td>
         <td [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'"
-            style="height: 62px">{{mission.value.task[0].questions}}</td>
+            style="height: 85px">{{mission.value.task[0].questions}}</td>
         <td [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'"
-            class="p-0" style="height: 62px">
+            class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-success"
                   [disabled]="(mission.key==1 && mission.value.task[0].questions>=5) ||
                               (mission.key==2 && mission.value.task[0].questions>=10) ||
-                              (mission.key==3 && mission.value.task[0].questions>=5) ||
+                              (mission.key==3 && mission.value.task[0].questions>=10) ||
                               (mission.key==4 && mission.value.task[0].questions>=15)"
                   (click)="updateQuestions(raw.key,mission.key,0,mission.value.task[0].questions+1, +1)">+</button></td>
       </tr>
     </td>
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-danger"
                   [disabled]="(mission.key==1 && mission.value.task[0].hints==0) ||
                               (mission.key==2 && mission.value.task[0].hints==0) ||
                               (mission.key==3 && mission.value.task[0].hints==0) ||
                               (mission.key==4 && mission.value.task[0].hints==0)"
                   (click)="updateHints(raw.key,mission.key,0,mission.value.task[0].hints-1, -1)">-</button></td>
-        <td style="height: 62px">{{mission.value.task[0].hints}}</td>
-        <td class="p-0" style="height: 62px">
+        <td style="height: 85px">{{mission.value.task[0].hints}}</td>
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'First Light' || mission.value.name == 'Last Stand'"class="btn btn-success"
                   [disabled]="(mission.key==1 && mission.value.task[0].hints>=5) ||
                               (mission.key==2 && mission.value.task[0].hints>=0) ||
@@ -97,26 +97,26 @@
 <!--    <td class="p-0"></td>-->
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-danger"
                   [disabled]="(mission.key==1 && mission.value.task[1].questions==0) ||
                               (mission.key==2 && mission.value.task[1].questions==0) ||
                               (mission.key==3 && mission.value.task[1].questions==0) ||
                               (mission.key==4 && mission.value.task[1].questions==0)"
                   (click)="updateQuestions(raw.key,mission.key,1,mission.value.task[1].questions-1,-1)">-</button></td>
-        <td style="height: 62px">{{mission.value.task[1].questions}}</td>
-        <td class="p-0" style="height: 62px">
+        <td style="height: 85px">{{mission.value.task[1].questions}}</td>
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-success"
                   [disabled]="(mission.key==1 && mission.value.task[1].questions>=5) ||
                               (mission.key==2 && mission.value.task[1].questions>=10) ||
-                              (mission.key==3 && mission.value.task[1].questions>=5) ||
+                              (mission.key==3 && mission.value.task[1].questions>=10) ||
                               (mission.key==4 && mission.value.task[1].questions>=15)"
                   (click)="updateQuestions(raw.key,mission.key,1,mission.value.task[1].questions+1,+1)">+</button></td>
       </tr>
     </td>
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-danger"
                   [disabled]="(mission.key==1 && mission.value.task[1].hints==0) ||
                               (mission.key==2 && mission.value.task[1].hints==0) ||
@@ -124,7 +124,7 @@
                               (mission.key==4 && mission.value.task[1].hints==0)"
                   (click)="updateHints(raw.key,mission.key,1,mission.value.task[1].hints-1, -1)">-</button></td>
         <td>{{mission.value.task[1].hints}}</td>
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-success"
                   [disabled]="(mission.key==1 && mission.value.task[1].hints>=5) ||
                               (mission.key==2 && mission.value.task[1].hints>=0) ||
@@ -136,7 +136,7 @@
 <!--    <td class="p-0"></td>-->
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-danger"
                   [disabled]="(mission.key==1 && mission.value.task[2].questions==0) ||
                               (mission.key==2 && mission.value.task[2].questions==0) ||
@@ -144,18 +144,18 @@
                               (mission.key==4 && mission.value.task[2].questions==0)"
                   (click)="updateQuestions(raw.key,mission.key,2,mission.value.task[2].questions-1, -1)">-</button></td>
         <td>{{mission.value.task[2].questions}}</td>
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-success"
                   [disabled]="(mission.key==1 && mission.value.task[2].questions>=5) ||
                               (mission.key==2 && mission.value.task[2].questions>=10) ||
-                              (mission.key==3 && mission.value.task[2].questions>=5) ||
+                              (mission.key==3 && mission.value.task[2].questions>=10) ||
                               (mission.key==4 && mission.value.task[2].questions>=15)"
                   (click)="updateQuestions(raw.key,mission.key,2,mission.value.task[2].questions+1, +1)">+</button></td>
       </tr>
     </td>
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions | keyvalue">
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-danger"
                   [disabled]="(mission.key==1 && mission.value.task[2].hints==0) ||
                               (mission.key==2 && mission.value.task[2].hints==0) ||
@@ -163,7 +163,7 @@
                               (mission.key==4 && mission.value.task[2].hints==0)"
                   (click)="updateHints(raw.key,mission.key,2,mission.value.task[2].hints-1, -1)">-</button></td>
         <td>{{mission.value.task[2].hints}}</td>
-        <td class="p-0" style="height: 62px">
+        <td class="p-0" style="height: 85px">
           <button [hidden]="mission.value.name == 'Explorer' || mission.value.name == 'First Light' || mission.value.name == 'Last Stand'" class="btn btn-success"
                   [disabled]="(mission.key==1 && mission.value.task[2].hints>=5) ||
                               (mission.key==2 && mission.value.task[2].hints>=0) ||
@@ -175,17 +175,17 @@
 <!--    <td class="p-0"></td>-->
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions">
-        <td style="height: 62px">{{mission.task[0].questions+mission.task[1].questions+mission.task[2].questions}}</td>
+        <td style="height: 85px">{{mission.task[0].questions+mission.task[1].questions+mission.task[2].questions}}</td>
       </tr>
     </td>
     <td class="p-0" >
       <tr *ngFor="let mission of raw.value.missions">
-        <td style="height: 62px; width: 100%">{{mission.task[0].hints+mission.task[1].hints+mission.task[2].hints}}</td>
+        <td style="height: 85px; width: 100%">{{mission.task[0].hints+mission.task[1].hints+mission.task[2].hints}}</td>
       </tr>
     </td>
     <td class="p-0">
       <tr *ngFor="let mission of raw.value.missions">
-        <td style="height: 62px; width: 100%">--</td>
+        <td style="height: 85px; width: 100%" >{{mission.timeLeft}}</td>
       </tr>
     </td>
 <!--    <td class="p-0">-->

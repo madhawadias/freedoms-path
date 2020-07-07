@@ -12,6 +12,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import { MainDashboardComponent } from './main-dashboard/main-dashboard.component';
 import { LoginComponent } from './login/login.component';
 import {FormsModule} from "@angular/forms";
+import {DataTablesModule} from "angular-datatables";
 firebase.initializeApp(environment.firebaseConfig)
 
 @NgModule({
@@ -27,7 +28,8 @@ firebase.initializeApp(environment.firebaseConfig)
     AppRoutingModule,
     BrowserAnimationsModule,
     DragDropModule,
-    FormsModule
+    FormsModule,
+    DataTablesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

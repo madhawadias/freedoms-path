@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core'
 import * as firebase from "firebase";
 import {ActivatedRoute} from "@angular/router";
 import { timer } from 'rxjs';
+import {MainDashboardComponent} from "../main-dashboard/main-dashboard.component";
+import {split} from "ts-node";
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -12,26 +14,30 @@ export class ManagerDashboardComponent implements OnInit {
   public teamsData: any = [];
   public outputData: any = [];
   public id: any = [];
+  public teamRanks: any = [];
   timeLeft: number = 60;
   interval;
   subscribeTimer: any;
+
 
   constructor(private route: ActivatedRoute) {
     this.id = route.snapshot.params.id
   }
 
   ngOnInit(): void {
+    // let mainDashboardObject = new MainDashboardComponent()
     // this.getTeam(this.id)
     this.getTeams()
+    // mainDashboardObject.ngOnInit()
     // this.getTeamPoints(0)
     // this.updateQuestions(this.teamId,this.missionId,this.taskId,this.score)
-    this.createTeam()
+    // this.createTeam()
     // this.createArray()
     // console.log(this.teamsData)
   }
 
   createTeam(){
-    let numValue: number = 10
+    let numValue: number = 9
     let teamValue = numValue + 1
     let team: string = teamValue.toString()
     let num: string = numValue.toString()
@@ -250,6 +256,7 @@ export class ManagerDashboardComponent implements OnInit {
     return hints
   }
 
+
   updatePoints(teamId){
     let self = this;
     let points : number = 0;
@@ -335,6 +342,35 @@ export class ManagerDashboardComponent implements OnInit {
       firebase.database().ref('/teams/').once('value').then(function(snapshot) {
         self.teamsData = snapshot.val();
         console.log(snapshot.val())
+        for(let i = 0; i < self.teamsData.length; i++){
+          let teamObj = {
+            teamId: i,
+            teamPoints: self.teamsData[i].points
+          }
+          self.teamRanks.push(teamObj)
+          // self.teamsData[0].missions[1].timeLeft = 1800
+          // if(!self.teamsData[i].missions[0].timeLeft){
+          //   self.teamsData[i].missions[0].timeLeft = 0
+          // }if(!self.teamsData[i].missions[1].timeLeft){
+          //   self.teamsData[i].missions[1].timeLeft = 0
+          // }if(!self.teamsData[i].missions[2].timeLeft){
+          //   self.teamsData[i].missions[2].timeLeft = 0
+          // }if(!self.teamsData[i].missions[3].timeLeft){
+          //   self.teamsData[i].missions[3].timeLeft = 0
+          // }if(!self.teamsData[i].missions[4].timeLeft){
+          //   self.teamsData[i].missions[4].timeLeft = 0
+          // }if(!self.teamsData[i].missions[5].timeLeft){
+          //   self.teamsData[i].missions[5].timeLeft = 0
+          // }
+
+        }
+        self.teamRanks.sort((a, b) => (a.teamPoints > b.teamPoints) ? -1 : 1)
+        console.log("Team Ranks: " ,self.teamRanks)
+        for(let i = 0; i < self.teamRanks.length; i++){
+          self.teamsData[self.teamRanks[i].teamId].rank = i+1
+
+        }
+        console.log("Rank Added", self.teamsData)
       });
 
   }
@@ -350,6 +386,7 @@ export class ManagerDashboardComponent implements OnInit {
     let self = this;
 
     if(timeType == "startTime"){
+      self.startTimer(teamId, missionId)
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({startTime: timeValue}).then(() => {
         console.log("working")
@@ -357,7 +394,6 @@ export class ManagerDashboardComponent implements OnInit {
           self.teamsData = snapshot.val();
           // self.teamsData1 = snapshot.val();
           console.log(snapshot.val())
-          // self.startTimer()
           // self.updateTimeBonus(teamId, missionIdNum, missionId)
         });
       })
@@ -582,7 +618,7 @@ export class ManagerDashboardComponent implements OnInit {
 
   }
 
-  timeLeftTimer() {
+  oberserableTimer() {
     const source = timer(1000, 2000);
     const abc = source.subscribe(val => {
       console.log(val, '-');
@@ -590,12 +626,33 @@ export class ManagerDashboardComponent implements OnInit {
     });
   }
 
-  startTimer() {
+  startTimer(teamId, missionId) {
+    // let timeInString = this.teamsData[teamId].missions[missionId].startTime
+    // let splitted = timeInString.split(":")
+    // let minutes: number = + splitted[0]
+    // let seconds: number = + splitted[1] + minutes*60
+    // console.log("Seconds: ", seconds)
+    // this.timeLeft = seconds
+    // console.log("TimeLeft: ", this.timeLeft)
+    if(missionId == 0){
+      this.teamsData[teamId].missions[missionId].timeLeft = 0
+    }if(missionId == 1){
+      this.teamsData[teamId].missions[missionId].timeLeft = 1800
+    }if(missionId == 2){
+      this.teamsData[teamId].missions[missionId].timeLeft = 1200
+    }if(missionId == 3){
+      this.teamsData[teamId].missions[missionId].timeLeft = 1800
+    }if(missionId == 4){
+      this.teamsData[teamId].missions[missionId].timeLeft = 600
+    }if(missionId == 5){
+      this.teamsData[teamId].missions[missionId].timeLeft = 0
+    }
+
     this.interval = setInterval(() => {
-      if(this.timeLeft > 0) {
-        this.timeLeft--;
+      if(this.teamsData[teamId].missions[missionId].timeLeft > 0) {
+        this.teamsData[teamId].missions[missionId].timeLeft--;
       } else {
-        this.timeLeft = 60;
+        this.teamsData[teamId].missions[missionId].timeLeft = 0;
       }
     },1000)
   }
