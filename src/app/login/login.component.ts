@@ -29,7 +29,9 @@ export class LoginComponent implements OnInit {
         console.log("Username : "+childSnapshot.val().username + " Pass : "+ childSnapshot.val().password )
         if (childSnapshot.val().username==username && childSnapshot.val().password==password){
           console.log("Login Successful")
-          routerOne.navigate(["manager-dashboard", {id:childSnapshot.key}])
+          sessionStorage.setItem('managerId',childSnapshot.key)
+          console.log(sessionStorage)
+          routerOne.navigate(["manager-dashboard"])
         }
         if(childSnapshot.val().username==username && childSnapshot.val().password!=password){
           console.log("Username Exists, Wrong password")

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import * as firebase from "firebase";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { timer } from 'rxjs';
 import {MainDashboardComponent} from "../main-dashboard/main-dashboard.component";
 import {split} from "ts-node";
@@ -20,14 +20,13 @@ export class ManagerDashboardComponent implements OnInit {
   subscribeTimer: any;
 
 
-  constructor(private route: ActivatedRoute) {
-    this.id = route.snapshot.params.id
+  constructor(private router: Router) {
   }
 
   ngOnInit(): void {
     // let mainDashboardObject = new MainDashboardComponent()
-    // this.getTeam(this.id)
-    this.getTeams()
+    this.getTeam(sessionStorage.getItem("managerId"))
+    // this.getTeams()
     // mainDashboardObject.ngOnInit()
     // this.getTeamPoints(0)
     // this.updateQuestions(this.teamId,this.missionId,this.taskId,this.score)
@@ -218,13 +217,20 @@ export class ManagerDashboardComponent implements OnInit {
 
   getTeam(managerId){
     let self = this;
-    let managerIdValue: number = +managerId
-    console.log("managerId : " + managerIdValue)
-    firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdValue).on('value', function(snapshot) {
-      self.teamsData = snapshot.val();
-      // self.teamsData1 = snapshot.val();
-      console.log(snapshot.val())
-    });
+    let routerOne = this.router;
+    if(sessionStorage.length == 0){
+      routerOne.navigate(["login"])
+    }else{
+      // let managerIdValue: number = +managerId
+      // console.log("managerId : " + managerIdValue)
+      let managerIdNum: number = +managerId
+      firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).on('value', function(snapshot) {
+        self.teamsData = snapshot.val();
+        // self.teamsData1 = snapshot.val();
+        console.log(snapshot.val())
+      });
+    }
+
   }
   getTeamPoints(teamId){
     let points : number = 0
