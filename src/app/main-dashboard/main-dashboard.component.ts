@@ -9,6 +9,7 @@ import * as firebase from "firebase";
 export class MainDashboardComponent implements OnInit {
   public teamsData: any = [];
   public teamRanks: any = [];
+  public completedMissions: any = [];
 
   constructor() { }
 
@@ -29,6 +30,15 @@ export class MainDashboardComponent implements OnInit {
           teamPoints: self.teamsData[i].points
         }
         self.teamRanks.push(teamObj)
+        let missionsCompleted: any = []
+        for(let j = 0; j < self.teamsData[i].missions.length; j++){
+
+          if(self.teamsData[i].missions[j].endTime != 0){
+            missionsCompleted.push(self.teamsData[i].missions[j].name)
+          }
+        }
+        self.teamsData[i].completed = missionsCompleted
+
 
       }
       self.teamRanks.sort((a, b) => (a.teamPoints > b.teamPoints) ? -1 : 1)
@@ -41,5 +51,6 @@ export class MainDashboardComponent implements OnInit {
       console.log("Rank Added", self.teamsData)
     });
   }
+
 
 }

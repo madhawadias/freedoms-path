@@ -1,5 +1,5 @@
 <app-nav-bar></app-nav-bar>
-<table id="example" class="table table-striped table-bordered" style="width:100%">
+<table id="example" class="table table-striped table-bordered table-dark" style="width:100%">
 <!--  <table id="example" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" style="width:100%">-->
   <thead>
   <tr>
@@ -7,7 +7,6 @@
     <th style="width: 100px">Team</th>
     <th>Missions Completed</th>
     <th>Current Mission</th>
-    <th>Current Mission Status</th>
     <th>Mission Time Left</th>
     <th>Questions Completed</th>
     <th>Hints Taken</th>
@@ -18,9 +17,8 @@
   <tr *ngFor="let raw of teamsData">
     <td>{{raw.rank}}</td>
     <td>{{raw.name}}</td>
-    <td></td>
+    <td>{{raw.completed}}</td>
     <td>{{raw.mission}}</td>
-    <td>Overdue</td>
     <td></td>
     <td>{{raw.questions}}</td>
     <td>{{raw.hints}}</td>
