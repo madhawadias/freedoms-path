@@ -228,6 +228,21 @@ export class ManagerDashboardComponent implements OnInit {
         self.teamsData = snapshot.val();
         // self.teamsData1 = snapshot.val();
         console.log(snapshot.val())
+        for(let i = 0; i < self.teamsData.length; i++){
+          let teamObj = {
+            teamId: i,
+            teamPoints: self.teamsData[i].points
+          }
+          self.teamRanks.push(teamObj)
+        }
+        self.teamRanks.sort((a, b) => (a.teamPoints > b.teamPoints) ? -1 : 1)
+        console.log("Team Ranks: " ,self.teamRanks)
+        for(let i = 0; i < self.teamRanks.length; i++){
+          self.teamsData[self.teamRanks[i].teamId].rank = i+1
+
+        }
+        console.log("Rank Added", self.teamsData)
+
       });
     }
 
@@ -267,8 +282,10 @@ export class ManagerDashboardComponent implements OnInit {
     let self = this;
     let points : number = 0;
     let scoreValue : number = 0;
-    // this.getTeams()
-    firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+    let managerId = sessionStorage.getItem("managerId")
+    let managerIdNum: number = +managerId
+    firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+    // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
       self.teamsData = snapshot.val();
       console.log(snapshot.val())
     }).then(() => {
@@ -331,7 +348,8 @@ export class ManagerDashboardComponent implements OnInit {
       // points = points + scoreValue
       firebase.database().ref('/teams/').child(teamId)
         .update({points: points}).then(() => {
-        firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+        // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
           self.teamsData = snapshot.val();
           console.log(snapshot.val())
         });
@@ -396,7 +414,10 @@ export class ManagerDashboardComponent implements OnInit {
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({startTime: timeValue}).then(() => {
         console.log("working")
-        firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        let managerId = sessionStorage.getItem("managerId")
+        let managerIdNum: number = +managerId
+        firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+        // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
           self.teamsData = snapshot.val();
           // self.teamsData1 = snapshot.val();
           console.log(snapshot.val())
@@ -410,7 +431,10 @@ export class ManagerDashboardComponent implements OnInit {
       firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
         .update({endTime: timeValue}).then(() => {
           console.log("working")
-        firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        let managerId = sessionStorage.getItem("managerId")
+        let managerIdNum: number = +managerId
+        firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+        // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
           self.teamsData = snapshot.val();
           // self.teamsData1 = snapshot.val();
           console.log(snapshot.val())
@@ -481,7 +505,10 @@ export class ManagerDashboardComponent implements OnInit {
       if (i == teamId && missionIdNum == 1 && ((this.teamsData[i].missions[missionIdNum].task[taskIdNum].questions == 5 ))) {
         firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId).child('task').child(taskId)
           .update({taskBonus: 3000}).then(() => {
-          firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+          let managerId = sessionStorage.getItem("managerId")
+          let managerIdNum: number = +managerId
+          firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+          // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
             self.teamsData = snapshot.val();
             console.log(snapshot.val())
           });
@@ -553,7 +580,10 @@ export class ManagerDashboardComponent implements OnInit {
       .child('task').child(taskId).update({questions: score})
     firebase.database().ref('/teams/').child(teamId)
       .update({questions: questionsValue + signValue}).then(() => {
-      firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+      let managerId = sessionStorage.getItem("managerId")
+      let managerIdNum: number = +managerId
+      firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
         self.teamsData = snapshot.val();
         console.log(snapshot.val())
         self.updateTaskBonus(teamId, missionId, taskId)
@@ -561,7 +591,7 @@ export class ManagerDashboardComponent implements OnInit {
       });
 
     });
-    this.getTeams();
+    this.getTeam(sessionStorage.getItem("managerId"))
 
 
   }
@@ -599,14 +629,17 @@ export class ManagerDashboardComponent implements OnInit {
       .child('task').child(taskId).update({hints: score})
     firebase.database().ref('/teams/').child(teamId)
       .update({hints: hintsValue - signValue}).then(() => {
-      firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+      let managerId = sessionStorage.getItem("managerId")
+      let managerIdNum: number = +managerId
+      firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
         self.teamsData = snapshot.val();
         console.log(snapshot.val())
         self.updatePoints(teamId)
       });
 
     });
-    this.getTeams();
+    this.getTeam(sessionStorage.getItem("managerId"))
   }
 
   updateFirstLightScore(teamId, score){
@@ -614,7 +647,10 @@ export class ManagerDashboardComponent implements OnInit {
     let scoreValue: number = +score
     firebase.database().ref('/teams/').child(teamId).child('missions').child('0')
       .child('task').child('0').update({questions: scoreValue}).then(() => {
-      firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+      let managerId = sessionStorage.getItem("managerId")
+      let managerIdNum: number = +managerId
+      firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
         self.teamsData = snapshot.val();
         console.log(snapshot.val())
         self.updatePoints(teamId)
@@ -671,7 +707,7 @@ export class ManagerDashboardComponent implements OnInit {
     let self = this;
     let dataItem: any = [];
     let tempStr: String;
-    self.getTeams()
+    this.getTeam(sessionStorage.getItem("managerId"))
 
     for (let team in this.teamsData){
       let teamItem: String[] = []
