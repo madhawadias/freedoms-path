@@ -27,6 +27,7 @@
     "datatables.net-dt": "^1.10.21",
     "firebase": "^7.14.6",
     "jquery": "^3.5.1",
+    "ngx-countdown": "^10.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

@@ -13,6 +13,7 @@ import { MainDashboardComponent } from './main-dashboard/main-dashboard.componen
 import { LoginComponent } from './login/login.component';
 import {FormsModule} from "@angular/forms";
 import {DataTablesModule} from "angular-datatables";
+import {CountdownModule} from "ngx-countdown";
 firebase.initializeApp(environment.firebaseConfig)
 
 @NgModule({
@@ -29,7 +30,8 @@ firebase.initializeApp(environment.firebaseConfig)
     BrowserAnimationsModule,
     DragDropModule,
     FormsModule,
-    DataTablesModule
+    DataTablesModule,
+    CountdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -35,6 +35,20 @@ export class MainDashboardComponent implements OnInit {
 
           if(self.teamsData[i].missions[j].endTime != 0){
             missionsCompleted.push(self.teamsData[i].missions[j].name)
+
+          // if(self.teamsData[i].missions[j].startTime != 0){
+          //   if(self.teamsData[i].missions[j].name == 'Air CMC'){
+          //     let timeLeftSeconds: number = 0;
+          //     let missionTime: number = 1800;
+          //
+          //     let timeInString = self.teamsData[i].missions[j].startTime
+          //     let splitted = timeInString.split(":")
+          //     let minutes: number = + splitted[0]
+          //     let seconds: number = + splitted[1] + minutes*60
+          //     console.log("Seconds: ", seconds)
+          //
+          //   }
+          // }
           }
         }
         self.teamsData[i].completed = missionsCompleted
