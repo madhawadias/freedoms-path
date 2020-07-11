@@ -25,7 +25,7 @@ export class MainDashboardComponent implements OnInit {
       self.teamsData = snapshot.val();
       let teamRanksLocal: any = [];
       // self.teamsData1 = snapshot.val();
-      console.log(snapshot.val())
+      // console.log(snapshot.val())
       for(let i = 0; i < self.teamsData.length; i++){
         let teamObj = {
           teamId: i,
@@ -58,14 +58,14 @@ export class MainDashboardComponent implements OnInit {
 
       }
       teamRanksLocal.sort((a, b) => (a.teamPoints > b.teamPoints) ? -1 : 1)
-      console.log("Team Ranks: " ,teamRanksLocal)
+      // console.log("Team Ranks: " ,teamRanksLocal)
       for(let i = 0; i < teamRanksLocal.length; i++){
         self.teamsData[teamRanksLocal[i].teamId].rank = i+1
 
       }
       self.teamsData.sort((a,b) => (a.rank > b.rank) ? 1 : -1)
       self.teamRanks = teamRanksLocal
-      console.log("Rank Added", self.teamsData)
+      // console.log("Rank Added", self.teamsData)
     });
   }
 

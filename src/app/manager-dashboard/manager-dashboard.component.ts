@@ -36,13 +36,14 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   createTeam(){
-    let numValue: number = 14
+    let numValue: number = 29
     let teamValue = numValue + 1
     let team: string = teamValue.toString()
     let num: string = numValue.toString()
     firebase.database().ref('teams/'+num).set({
-      name: "Team "+team,
-      managerId: 9,
+      name: "KPMG",
+      teamId: "Team "+team,
+      managerId: 18,
       questions: 0,
       hints: 0,
       points: 0,
