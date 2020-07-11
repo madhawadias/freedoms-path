@@ -54,11 +54,10 @@ export class LoginComponent implements OnInit {
   }
 
   createManager(){
-    firebase.database().ref('managers/1').set({
-      name: "Madhawa Dias",
-      username: "madhawad",
-      password: "1234",
-      team: [2,3],
+    firebase.database().ref('managers/18').set({
+      name: "Yomal",
+      username: "CM-18",
+      password: "cm18"
 
     });
   }

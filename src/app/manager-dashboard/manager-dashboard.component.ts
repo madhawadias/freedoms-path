@@ -36,13 +36,13 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   createTeam(){
-    let numValue: number = 9
+    let numValue: number = 14
     let teamValue = numValue + 1
     let team: string = teamValue.toString()
     let num: string = numValue.toString()
     firebase.database().ref('teams/'+num).set({
       name: "Team "+team,
-      managerId: 0,
+      managerId: 9,
       questions: 0,
       hints: 0,
       points: 0,
@@ -259,9 +259,9 @@ export class ManagerDashboardComponent implements OnInit {
     firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
     // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
       self.teamsData = snapshot.val();
-      // console.log(snapshot.val())
     }).then(() => {
-      for (let i=0; i<this.teamsData.length; i++){
+      //for (let i=0; i<this.teamsData.length; i++){
+      let i : number = +teamId
         if (i == teamId){
           // points = this.teamsData[i].points
           let firstLightPoints = this.teamsData[i].missions[0].task[0].questions
@@ -319,11 +319,7 @@ export class ManagerDashboardComponent implements OnInit {
             -portionsMasterTask0Hints-portionsMasterTask1Hints-portionsMasterTask2Hints
 
         }
-      }
 
-      // scoreValue =  score
-      // console.log("existing point: "+points+" New score: "+scoreValue)
-      // points = points + scoreValue
       firebase.database().ref('/teams/').child(teamId)
         .update({points: points}).then(() => {
         firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
@@ -335,7 +331,90 @@ export class ManagerDashboardComponent implements OnInit {
       });
     });
 
+  }
 
+  updateTotalQuestions(teamId){
+    let self = this;
+    let questions : number = 0;
+    let managerId = sessionStorage.getItem("managerId")
+    let managerIdNum: number = +managerId
+    firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+      self.teamsData = snapshot.val();
+    }).then(() => {
+      //for (let i=0; i<this.teamsData.length; i++){
+      let i : number = +teamId
+      if (i == teamId){
+
+        let airCMCTask0points = this.teamsData[i].missions[1].task[0].questions
+        let airCMCTask1points = this.teamsData[i].missions[1].task[1].questions
+        let airCMCTask2points = this.teamsData[i].missions[1].task[2].questions
+
+        let cornMazeTask0Points = this.teamsData[i].missions[2].task[0].questions
+        let cornMazeTask1Points = this.teamsData[i].missions[2].task[1].questions
+        let cornMazeTask2Points = this.teamsData[i].missions[2].task[2].questions
+
+        let portionsMasterTask0Points = this.teamsData[i].missions[3].task[0].questions
+        let portionsMasterTask1Points = this.teamsData[i].missions[3].task[1].questions
+        let portionsMasterTask2Points = this.teamsData[i].missions[3].task[2].questions
+
+        let explorerTask0Points = this.teamsData[i].missions[4].task[0].questions
+
+        questions = airCMCTask0points+airCMCTask1points+airCMCTask2points
+          +cornMazeTask0Points+cornMazeTask1Points+cornMazeTask2Points
+          +portionsMasterTask0Points+portionsMasterTask1Points+portionsMasterTask2Points
+          +explorerTask0Points
+      }
+
+      firebase.database().ref('/teams/').child(teamId)
+        .update({questions: questions}).then(() => {
+        firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+          // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+          self.teamsData = snapshot.val();
+        });
+
+      });
+    });
+
+  }
+
+  updateTotalHints(teamId){
+    let self = this;
+    let hints : number = 0;
+    let managerId = sessionStorage.getItem("managerId")
+    let managerIdNum: number = +managerId
+    firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+      self.teamsData = snapshot.val();
+    }).then(() => {
+      //for (let i=0; i<this.teamsData.length; i++){
+      let i : number = +teamId
+      if (i == teamId){
+
+        let airCMCTask0points = this.teamsData[i].missions[1].task[0].hints
+        let airCMCTask1points = this.teamsData[i].missions[1].task[1].hints
+        let airCMCTask2points = this.teamsData[i].missions[1].task[2].hints
+
+        let portionsMasterTask0Points = this.teamsData[i].missions[3].task[0].hints
+        let portionsMasterTask1Points = this.teamsData[i].missions[3].task[1].hints
+        let portionsMasterTask2Points = this.teamsData[i].missions[3].task[2].hints
+
+        let explorerTask0Points = this.teamsData[i].missions[4].task[0].questions
+
+        hints = airCMCTask0points+airCMCTask1points+airCMCTask2points
+          +portionsMasterTask0Points+portionsMasterTask1Points+portionsMasterTask2Points
+          +explorerTask0Points
+      }
+
+      firebase.database().ref('/teams/').child(teamId)
+        .update({hints: hints}).then(() => {
+        firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+          // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+          self.teamsData = snapshot.val();
+        });
+
+      });
+    });
 
   }
 
@@ -432,11 +511,6 @@ export class ManagerDashboardComponent implements OnInit {
 
   }
 
-  updateLastStandPoints(){
-    let self = this
-
-  }
-
   updateLastStandTimeDif(teamId){
     let teamIdNum: number = +teamId
     let timeDifference: number = 0
@@ -469,7 +543,7 @@ export class ManagerDashboardComponent implements OnInit {
         console.log(snapshot.val())
         let teamLSRanks: any = [];
         for(let i = 0; i < self.teamsData.length; i++){
-          if(self.teamsData[i].missions[5].timeDif != null){
+          if(self.teamsData[i].missions[5].timeDif != null && self.teamsData[i].missions[5].timeDif != 0){
             let teamLSObj = {
               teamId: i,
               teamTimeDif: self.teamsData[i].missions[5].timeDif
@@ -499,8 +573,9 @@ export class ManagerDashboardComponent implements OnInit {
 
   updateTimeBonus(teamId, missionIdNum: number, missionId) {
 
-    for (let i = 0; i < this.teamsData.length; i++) {
+    //for (let i = 0; i < this.teamsData.length; i++) {
       // Checks whether all questions are answered
+    let i: number = +teamId
       if (i == teamId && ((this.teamsData[i].missions[1].task[0].questions == 5 && this.teamsData[i].missions[1].task[1].questions == 5 && this.teamsData[i].missions[1].task[0].questions == 5)
         || (this.teamsData[i].missions[2].task[0].questions == 10 && this.teamsData[i].missions[2].task[1].questions == 10 && this.teamsData[i].missions[2].task[0].questions == 10)
         || (this.teamsData[i].missions[3].task[0].questions == 10 && this.teamsData[i].missions[3].task[1].questions == 10 && this.teamsData[i].missions[3].task[0].questions == 10)
@@ -577,8 +652,11 @@ export class ManagerDashboardComponent implements OnInit {
           firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
             .update({timeBonus: extraMins * 150})
         }
+      }else{
+        firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
+          .update({timeBonus: 0})
       }
-    }
+    //}
   }
 
   updateTaskBonus(teamId, missionId, taskId){
@@ -639,24 +717,26 @@ export class ManagerDashboardComponent implements OnInit {
     taskId = taskId.toString();
     console.log(teamId + missionId + taskId + score)
     let questionsValue : number = 0;
-    for (let i=0; i<this.teamsData.length; i++){
+    //for (let i=0; i<this.teamsData.length; i++){
+    let i: number = +teamId
       if (i == teamId){
         questionsValue = this.teamsData[i].questions
       }
-    }
+    //}
     firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
-      .child('task').child(taskId).update({questions: score})
-    firebase.database().ref('/teams/').child(teamId)
-      .update({questions: questionsValue + signValue}).then(() => {
-      let managerId = sessionStorage.getItem("managerId")
-      let managerIdNum: number = +managerId
-      firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
-      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
-        self.teamsData = snapshot.val();
-        console.log(snapshot.val())
+      .child('task').child(taskId).update({questions: score}).then(() => {
+      // let managerId = sessionStorage.getItem("managerId")
+      // let managerIdNum: number = +managerId
+      // firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+        // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        // self.teamsData = snapshot.val();
+        // console.log(snapshot.val())
+        let missionIdNum: number = +missionId
+        self.updateTotalQuestions(teamId)
         self.updateTaskBonus(teamId, missionId, taskId)
+        self.updateTimeBonus(teamId, missionIdNum, missionId)
         self.updatePoints(teamId)
-      });
+      // });
 
     });
     this.getTeam(sessionStorage.getItem("managerId"))
@@ -678,17 +758,16 @@ export class ManagerDashboardComponent implements OnInit {
       }
     }
     firebase.database().ref('/teams/').child(teamId).child('missions').child(missionId)
-      .child('task').child(taskId).update({hints: score})
-    firebase.database().ref('/teams/').child(teamId)
-      .update({hints: hintsValue - signValue}).then(() => {
-      let managerId = sessionStorage.getItem("managerId")
-      let managerIdNum: number = +managerId
-      firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
-      // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
-        self.teamsData = snapshot.val();
-        console.log(snapshot.val())
+      .child('task').child(taskId).update({hints: score}).then(() => {
+      // let managerId = sessionStorage.getItem("managerId")
+      // let managerIdNum: number = +managerId
+      //firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
+        // firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+        // self.teamsData = snapshot.val();
+        // console.log(snapshot.val())
+        self.updateTotalHints(teamId)
         self.updatePoints(teamId)
-      });
+      // });
 
     });
     this.getTeam(sessionStorage.getItem("managerId"))

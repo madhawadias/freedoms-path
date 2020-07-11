@@ -20,8 +20,10 @@ export class MainDashboardComponent implements OnInit {
 
   getTeams(){
     let self = this;
-    firebase.database().ref('/teams/').once('value').then(function(snapshot) {
+
+    firebase.database().ref('/teams/').on('value', function(snapshot) {
       self.teamsData = snapshot.val();
+      let teamRanksLocal: any = [];
       // self.teamsData1 = snapshot.val();
       console.log(snapshot.val())
       for(let i = 0; i < self.teamsData.length; i++){
@@ -29,7 +31,7 @@ export class MainDashboardComponent implements OnInit {
           teamId: i,
           teamPoints: self.teamsData[i].points
         }
-        self.teamRanks.push(teamObj)
+        teamRanksLocal.push(teamObj)
         let missionsCompleted: any = []
         for(let j = 0; j < self.teamsData[i].missions.length; j++){
 
@@ -55,13 +57,14 @@ export class MainDashboardComponent implements OnInit {
 
 
       }
-      self.teamRanks.sort((a, b) => (a.teamPoints > b.teamPoints) ? -1 : 1)
-      console.log("Team Ranks: " ,self.teamRanks)
-      for(let i = 0; i < self.teamRanks.length; i++){
-        self.teamsData[self.teamRanks[i].teamId].rank = i+1
+      teamRanksLocal.sort((a, b) => (a.teamPoints > b.teamPoints) ? -1 : 1)
+      console.log("Team Ranks: " ,teamRanksLocal)
+      for(let i = 0; i < teamRanksLocal.length; i++){
+        self.teamsData[teamRanksLocal[i].teamId].rank = i+1
 
       }
       self.teamsData.sort((a,b) => (a.rank > b.rank) ? 1 : -1)
+      self.teamRanks = teamRanksLocal
       console.log("Rank Added", self.teamsData)
     });
   }
