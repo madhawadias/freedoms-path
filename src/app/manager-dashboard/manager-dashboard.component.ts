@@ -528,15 +528,20 @@ export class ManagerDashboardComponent implements OnInit {
     let startTimeMin: number = +startTimeSplit[1]
     let startTimeSeconds: number = +startTimeSplit[2]
     startTimeSeconds = startTimeHours *60*60 + startTimeMin*60 + startTimeSeconds
-
-    timeDifference = endTimeSeconds - startTimeSeconds
+    if(isNaN(endTimeSeconds) || isNaN(startTimeSeconds)){
+      timeDifference = 0
+      firebase.database().ref('/teams/').child(teamId).child('missions').child('5')
+        .update({points: 0})
+    }else{
+      timeDifference = endTimeSeconds - startTimeSeconds
+    }
     console.log("Last stand Time Dif: ", timeDifference)
 
     let self = this
     firebase.database().ref('/teams/').child(teamId).child('missions').child('5')
       .update({timeDif: timeDifference}).then(() => {
-      let managerId = sessionStorage.getItem("managerId")
-      let managerIdNum: number = +managerId
+      // let managerId = sessionStorage.getItem("managerId")
+      // let managerIdNum: number = +managerId
       // firebase.database().ref('/teams/').orderByChild('managerId').equalTo(managerIdNum).once('value').then( function(snapshot) {
         firebase.database().ref('/teams/').once('value').then(function(snapshot) {
         self.teamsData = snapshot.val();
